@@ -1,22 +1,20 @@
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
-import { authService } from '../utils/services/auth'
+import { useAuth } from '../utils/contexts/AuthContext'
 
-const SignupPage: NextPage = () => {
+const SigninPage: NextPage = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+
+  const { signInWithEmailAndPassword } = useAuth()
 
   const router = useRouter()
 
   const onSubmitHandler = async (e: React.SyntheticEvent) => {
     e.preventDefault()
 
-    if (!email || !password) return
-
-    const result = await authService.signInWithEmailAndPassword(email, password)
-
-    console.log('result =>', result)
+    const result = await signInWithEmailAndPassword(email, password)
 
     if (result?.success) {
       // Login the user
@@ -25,21 +23,7 @@ const SignupPage: NextPage = () => {
 
     if (result?.error) {
       // Do something
-    }
-  }
-
-  const loginWithGoogleHandler = async () => {
-    const result = await authService.signInWithGoogle()
-
-    console.log('result =>', result)
-
-    if (result?.success) {
-      // Login the user
-      router.push('/dashboard')
-    }
-
-    if (result?.error) {
-      // Do something
+      alert(result?.errorMessage)
     }
   }
 
@@ -65,10 +49,6 @@ const SignupPage: NextPage = () => {
           <button className="px-4 py-3 bg-green-500 w-full">Sign in</button>
         </form>
 
-        <p className="">OR</p>
-
-        <button onClick={loginWithGoogleHandler}>Sign in Google</button>
-
         <p className="mt-4">
           Dont have an account?{' '}
           <span
@@ -83,4 +63,4 @@ const SignupPage: NextPage = () => {
   )
 }
 
-export default SignupPage
+export default SigninPage

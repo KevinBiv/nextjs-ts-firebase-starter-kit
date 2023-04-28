@@ -23,6 +23,8 @@ const ProtectedRoute = ({ children }: ProtectedRouteType) => {
     return <div>Loading...</div>
   }
 
+  if (!user.uid) return null
+
   return <>{children}</>
 }
 
